@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dao.AdminGoodsDao">
+<!-- 查询商品 -->
+	<select id="selectGoods"  resultType="ProductInfo">
+		select * from productinfo
+	</select>
+	<!-- 分页查询商品 -->
+	<select id="selectAllGoodsByPage"  resultType="ProductInfo" parameterType="map">
+		select * from productinfo order by productId limit #{startIndex}, #{perPageSize}
+	</select>
+	<!-- 根据id查询一个商品 -->
+	<select id="selectGoodsById"  resultType="ProductInfo" parameterType="Integer">
+		select gt.*,gy.typeName from productinfo gt,producttype gy where gt.productId=#{productId} and gt.typeId = gy.typeId
+	</select>
+	<!-- 删除多个商品 -->
+	<delete id="deleteGoods"  parameterType="List">
+		delete from productinfo where productId in
+		<foreach item="item" index="index" collection="list"
+		open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</delete>
+	<!-- 删除单个商品 -->
+	<delete id="deleteAGoods" parameterType="Integer">
+		delete from productinfo where productId=#{productId}
+	</delete>
+
+	<!-- 添加商品 -->
+	<insert id="addGoods" parameterType="ProductInfo">
+		insert into productinfo (productId,productName,productPrice,productQuantity,productPicture,typeId,productTime) 
+		values (null, #{productName}, #{productPrice}, #{productQuantity}, #{productPicture}, #{typeId},now())
+	</insert>
+
+
+	<!-- 修改一个商品 -->
+	<update id="updateGoodsById" parameterType="ProductInfo">
+    update productinfo
+    <set>
+      <if test="productName != null">
+        productName = #{productName},
+      </if>
+      <if test="productPrice != null">
+        productPrice = #{productPrice},
+      </if>
+      <if test="productHotprice != null">
+        productHotprice = #{productHotprice},
+      </if>
+      <if test="productQuantity != null">
+        productQuantity = #{productQuantity},
+      </if>
+      <if test="productPicture != null">
+        productPicture = #{productPicture},
+      </if>
+      <if test="typeId != null">
+        typeId = #{typeId},
+      </if>
+    </set>
+    	where productId = #{productId}
+  </update>
+
+</mapper>

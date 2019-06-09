@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dao.AdminOrderDao">
+	<select id="orderInfo"  resultType="map" >
+		select ot.productsaleId, ot.productTotal, ot.productorderStatus,ot.productorderTime, bt.userName
+		from productorder ot, user bt where ot.userId=bt.userId
+	</select>
+	<delete id="deleteOrderDetail" parameterType="Integer">
+		delete from orderdetail where productsaleId=#{productsaleId}
+	</delete>
+	<delete id="deleteProductOrder" parameterType="Integer">
+		delete from productorder where productsaleId=#{productsaleId}
+	</delete>
+</mapper>

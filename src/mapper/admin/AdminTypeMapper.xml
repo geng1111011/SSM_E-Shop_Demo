@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- com.dao.AdminTypeDao对应Dao接口 -->
+<mapper namespace="dao.AdminTypeDao">
+	<!-- 查询类型信息 -->
+	<select id="selectGoodsType"  resultType="ProductType" >
+		select * from producttype
+	</select>
+	<select id="selectsmallGoodsType"  resultType="ProductType" >
+		select * from producttype where typeParent!=0
+	</select>
+	<select id="selectbigGoodsType"  resultType="ProductType" >
+		select * from producttype where typeParent=0
+	</select>
+	<insert id="addType" parameterType="map">
+		insert into producttype (typeId, typeName,typeParent) values (null, #{typeName}, #{typeParent})
+	</insert>
+	<delete id="deleteType" parameterType="Integer">
+		delete from producttype where typeId = #{typeId}
+	</delete>
+	<select id="selectGoodsByType" resultType="ProductInfo" parameterType="Integer">
+		select * from productinfo where typeId=#{typeId}
+	</select>
+	<select id="selectGoodsTypeByType" resultType="ProductType" parameterType="Integer">
+		select * from producttype where typeParent=#{typeParent}
+	</select>
+</mapper>
