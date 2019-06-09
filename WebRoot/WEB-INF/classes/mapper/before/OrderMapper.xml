@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dao.OrderDao">
+
+  <resultMap id="BaseResultMap" type="po.Shoppingcar" >
+    <id column="carId" property="carid" jdbcType="INTEGER" />
+    <result column="productId" property="productid" jdbcType="INTEGER" />
+    <result column="productNumber" property="productnumber" jdbcType="INTEGER" />
+    <result column="userId" property="userid" jdbcType="INTEGER" />
+    <result column="carStatus" property="carstatus" jdbcType="INTEGER" />
+  </resultMap>
+
+	<!-- 添加一个订单，成功后将主键值回填给id（po类的属性）-->
+	<insert id="addOrder" parameterType="Order" keyProperty="productsaleId" useGeneratedKeys="true">
+		insert into productorder (userId,productTotal,productorderStatus,productorderTime) values (#{userId}, #{productTotal}, 0, now())
+	</insert>
+	
+	
+	<select id="selectList" parameterType="Integer" resultMap="BaseResultMap">
+		 select  productId, userId from shoppingcar where userId = #{uid} 
+	</select>
+	
+	
+	<!-- 生成订单详情 -->
+	<insert id="addOrderDetail" parameterType="map">
+		insert into orderdetail (productsaleId,orderId, productId,userId) values(#{ordersn},#{orderId}, #{productId}, #{userId})
+	</insert>
+	
+	
+	
+	
+	<!-- 查询商品购买量，以便更新库存使用 -->
+	<select id="selectGoodsShop"  parameterType="Integer" resultType="map">
+		select productNumber gshoppingnum, productId gid from shoppingcar where userId=#{uid}
+	</select>
+	<!-- 更新商品库存 -->
+	<update id="updateStore" parameterType="map">
+		update productinfo set productQuantity=productQuantity-#{gshoppingnum} where productId=#{gid} 
+	</update>
+	<!-- 清空购物车 -->
+	<delete id="clear" parameterType="Integer">
+		delete from shoppingcar where userId=#{uid} 
+	</delete>
+	<!-- 支付订单 -->
+	<update id="pay" parameterType="map">
+		update productorder set productorderStatus=1,productReceiver=#{productReceiver},productorderTel=#{productorderTel},productorderAddress=#{productorderAddress} where productsaleId=#{ordersn}<!--订单号  -->
+	</update>
+	
+		<!-- 查询商品购买量，以便更新库存使用 -->
+	<select id="checkUserDelete"  parameterType="Integer" resultType="map">
+		select * from productorder where userId=#{uid}
+	</select>
+	
+</mapper>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://www.mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dao.UserDao">
+	<select id="login"  resultType="Buser" parameterType="String">
+				select * from user where userName=#{userName} and userPassword=#{userPassword}
+	</select>
+	<insert id="register" parameterType="Buser">
+			insert into user (userId,userName,userPassword,userEmail,userTel) values (null, #{userName}, #{userPassword},#{userEmail},#{userTel})
+	</insert>
+	
+</mapper>
